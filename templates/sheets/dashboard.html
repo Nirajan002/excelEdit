@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load index_filter %}
+{% load custom_filters %}
+
+{% block content %}
+<h2>Upload Excel File</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" name="upload">Upload</button>
+</form>
+
+{% if table_mode %}
+<hr>
+<h3>Editable Table</h3>
+
+{% if table_mode and not edit_mode %}
+<form method="post" style="margin-bottom: 10px;">
+    {% csrf_token %}
+    <button type="submit" name="edit">Edit</button>
+</form>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="save" value="1">
+    <input type="hidden" name="rows" value="{{ df_data|length }}">
+    <input type="hidden" name="cols" value='{{ df_columns_json|escape }}'>
+
+    <!--
+    <label for="summary_mode">Show Summary:</label>
+    <select name="summary_mode" onchange="this.form.submit()">
+        <option value="both" {% if summary_mode == 'both' %}selected{% endif %}>Total & Average</option>
+        <option value="total" {% if summary_mode == 'total' %}selected{% endif %}>Total Only</option>
+        <option value="average" {% if summary_mode == 'average' %}selected{% endif %}>Average Only</option>
+        <option value="none" {% if summary_mode == 'none' %}selected{% endif %}>None</option>
+    </select>
+
+    <br><br> -->
+
+    <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+            <tr>
+                {% for col in df_columns %}
+                    <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in df_data %}
+            <tr>
+                {% for col in df_columns %}
+                    <td>
+                        {% if edit_mode %}
+                            <input type="text" name="{{ col }}_{{ forloop.parentloop.counter0 }}" value="{{ row|index:forloop.counter0 }}">
+                        {% else %}
+                            {{ row|index:forloop.counter0 }}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+
+            
+
+            {% if summary_mode != 'none' and summary_mode != 'average' %}
+            <!-- Totals Row -->
+            <tr style="font-weight: bold; background-color: #e0f7fa;">
+                <td>Total</td>
+                {% for col in df_columns|slice:"1:" %}
+                    <td>{{ totals|get_item:col|default:"" }}</td>
+                {% endfor %}
+            </tr>
+            {% endif %}
+
+            {% if summary_mode != 'none' and summary_mode != 'total' %}
+            <!-- Averages Row -->
+            <tr style="font-weight: bold; background-color: #f1f8e9;">
+                <td>Average</td>
+                {% for col in df_columns|slice:"1:" %}
+                    <td>{{ averages|get_item:col|default:"" }}</td>
+                {% endfor %}
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <br>
+    {% if edit_mode %}
+    <button type="submit" name="save">Save Changes</button>
+    <a href="{% url 'upload_excel' %}" class="btn btn-secondary" style="margin-left: 10px;">Cancel Edit</a>
+    {% endif %}
+</form>
+
+<br>
+<a href="{% url 'export_excel' %}">Download Edited Excel</a>
+{% endif %}
+{% endblock %}

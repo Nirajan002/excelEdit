@@ -1,0 +1,79 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
+}
+
+.navbar {
+    background: #333;
+    color: white;
+    padding: 15px 30px;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+}
+
+.auth-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.content {
+    padding: 30px;
+}
+
+.upload-form, .auth-form {
+    background: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+}
+
+.upload-form button,
+.auth-form button,
+.download-btn {
+    padding: 10px 20px;
+    background: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.upload-form button:hover,
+.auth-form button:hover,
+.download-btn:hover {
+    background: #555;
+}
+
+.table-container {
+    overflow-x: auto;
+    background: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table th,
+table td {
+    border: 1px solid #aaa;
+    padding: 8px;
+    text-align: left;
+}
